@@ -30,9 +30,19 @@ function App() {
         <div>
             <h1>Expense Tracker</h1>
             <form onSubmit={handleSubmit}>
-                <input value={form.title} onChange={e => setForm({...form,title: e.target.value })} placeholder="Title" required/>
-                <input value={form.amount} onChange={e => setForm({})}
+                <input value={form.title} onChange={e => setForm({...form, title: e.target.value })} placeholder="Title" required/>
+                <input type="number" value={form.amount} onChange={e => setForm({...form, amount: e.target.value})} placeholder="Amount" required/>
+                <input value={form.category} onChange={e => setForm({...form, category: e.target.value})} placeholder="Category" required/>
+                <input type="date" value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} required />
+                <button type="submit">Add Expense</button>
             </form>
+            <ul>
+                {expenses.map(exp => (
+                    <li key={exp.id}>{exp.title} - ${exp.amount}- {exp.category} <button onClick={() => deleteExpense(exp.id)}>Delete</button></li>
+                ))}
+            </ul>
         </div>
     );
 }
+
+export default App;
