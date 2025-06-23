@@ -1,11 +1,11 @@
 #backend/main
-from fastapi import FASTAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from typing import List
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-app=FASTAPI()
+app=FastAPI()
 
 #connecting to database 
 
