@@ -21,7 +21,7 @@ def get_db():
     conn = psycopg2.connect(
         host="db",
         database="expenses",
-        user="anton",
+        user="postgres",
         password="3022"
     )
     return conn
