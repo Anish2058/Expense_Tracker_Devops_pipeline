@@ -1,14 +1,22 @@
-#backend/main
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-app=FastAPI()
+app = FastAPI()
 
-#connecting to database 
+# Enable CORS for frontend communication
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+# Database connection
 def get_db():
     conn = psycopg2.connect(
         host="db",
@@ -18,7 +26,7 @@ def get_db():
     )
     return conn
 
-# Pydantic models
+# Pydantic model
 class Expense(BaseModel):
     id: int = None
     title: str
@@ -37,13 +45,13 @@ def get_expenses():
 
 @app.post("/expenses", response_model=Expense)
 def add_expense(expense: Expense):
-    conn = get_db
+    conn = get_db()
     cur = conn.cursor()
     cur.execute(
         """
         INSERT INTO expenses (title, amount, category, date)
         VALUES (%s, %s, %s, %s) RETURNING id
-        """,(expense.title, expense.amount, expense.category, expense.date))
+        """, (expense.title, expense.amount, expense.category, expense.date))
     expense.id = cur.fetchone()[0]
     conn.commit()
     conn.close()
@@ -60,14 +68,14 @@ def update_expense(id: int, expense: Expense):
         (expense.title, expense.amount, expense.category, expense.date, id))
     conn.commit()
     conn.close()
-    expense.id= id
+    expense.id = id
     return expense
 
 @app.delete("/expenses/{id}")
 def delete_expense(id: int):
-    conn = get_db
+    conn = get_db()
     cur = conn.cursor()
-    cur.execute("DELETE FROM expenses WHERE id=%s",(id,))
+    cur.execute("DELETE FROM expenses WHERE id=%s", (id,))
     conn.commit()
     conn.close()
-    return {"Message" : "Expense deleted"}
+    return {"message": "Expense deleted"}
