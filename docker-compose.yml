@@ -1,4 +1,5 @@
 version: '3.8'
+
 services:
   db:
     image: postgres
@@ -13,16 +14,22 @@ services:
 
   backend:
     build: ./backend
+    restart: always
     depends_on:
       - db
     ports:
       - "8000:8000"
     environment:
       - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=expenses
+      - DB_USER=postgres
+      - DB_PASSWORD=3022
 
   frontend:
     build: ./frontend
+    restart: always
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_API_URL=http://backend:8000
