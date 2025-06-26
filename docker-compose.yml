@@ -27,9 +27,12 @@ services:
       - DB_PASSWORD=3022
 
   frontend:
-    build: ./frontend
-    restart: always
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_API_URL: http://backend:8000
     ports:
       - "3000:3000"
     environment:
       - REACT_APP_API_URL=http://backend:8000
+
