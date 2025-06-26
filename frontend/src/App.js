@@ -5,7 +5,9 @@ function App() {
     const [expenses, setExpenses] = useState([]);
     const [form, setForm] = useState({ title: '', amount: '', category: '', date: '' });
 
-    const API = process.env.REACT_APP_API_URL || 'http://localhost:8000';  // fallback if env var not set
+    // In dev, proxy will handle the base URL
+    // In prod, REACT_APP_API_URL will be baked into the build
+    const API = process.env.REACT_APP_API_URL || '';
 
     const loadExpenses = async () => {
         const res = await axios.get(`${API}/expenses`);
