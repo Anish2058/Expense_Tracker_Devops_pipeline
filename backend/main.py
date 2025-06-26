@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import List
 import psycopg2
 from psycopg2.extras import RealDictCursor
+import os
 
 app = FastAPI()
 
@@ -17,14 +18,17 @@ app.add_middleware(
 )
 
 # Database connection
+
 def get_db():
     conn = psycopg2.connect(
-        host="db",
-        database="expenses",
-        user="postgres",
-        password="3022"
+        host=os.environ.get("DB_HOST", "localhost"),
+        port=os.environ.get("DB_PORT", "5432"),
+        database=os.environ.get("DB_NAME", "expenses"),
+        user=os.environ.get("DB_USER", "postgres"),
+        password=os.environ.get("DB_PASSWORD", "3022")
     )
     return conn
+
 
 # Pydantic model
 class Expense(BaseModel):
