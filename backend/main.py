@@ -5,6 +5,7 @@ from typing import List
 import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
+from datetime import date
 
 app = FastAPI()
 
@@ -36,7 +37,7 @@ class Expense(BaseModel):
     title: str
     amount: float
     category: str
-    date: str
+    date: date
 
 @app.get("/expenses", response_model=List[Expense])
 def get_expenses():
