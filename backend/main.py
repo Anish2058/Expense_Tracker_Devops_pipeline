@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI #, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
@@ -18,8 +18,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Database connection
 
+# Database connection
 def get_db():
     conn = psycopg2.connect(
         host=os.environ.get("DB_HOST", "localhost"),
@@ -39,6 +39,7 @@ class Expense(BaseModel):
     category: str
     date: date
 
+
 @app.get("/expenses", response_model=List[Expense])
 def get_expenses():
     conn = get_db()
@@ -47,6 +48,7 @@ def get_expenses():
     result = cur.fetchall()
     conn.close()
     return result
+
 
 @app.post("/expenses", response_model=Expense)
 def add_expense(expense: Expense):
@@ -62,6 +64,7 @@ def add_expense(expense: Expense):
     conn.close()
     return expense
 
+
 @app.put("/expenses/{id}", response_model=Expense)
 def update_expense(id: int, expense: Expense):
     conn = get_db()
@@ -75,6 +78,7 @@ def update_expense(id: int, expense: Expense):
     conn.close()
     expense.id = id
     return expense
+
 
 @app.delete("/expenses/{id}")
 def delete_expense(id: int):
